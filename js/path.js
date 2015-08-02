@@ -1,6 +1,7 @@
 var Path = function (dom, nodes) {
 	var MAXWIDTH = 1300,
 		MAXHEIGHT = 900,
+		INFINITY = Number.MAX_SAFE_INTEGER,
 		context = dom.getContext("2d");
 
 	dom.width = MAXWIDTH;
@@ -46,15 +47,21 @@ var Path = function (dom, nodes) {
 	}
 
 	function nodeDistance(a, b) {
-		return (Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
+		return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
 	}
 
 	function findShortestPath(a, b) {
 		// using Dijkstra's
+		// we'll make our own copy of the nodes to keep track of visited etc
+		var nodesCopy = {};
 
-
+		for (var prop in nodes) {
+			nodesCopy[prop] = {
+				visited: false,
+				weight: INFINITY
+			}
+		}
 	}
-
 
 
 	drawGraph();
