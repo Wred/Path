@@ -1,42 +1,6 @@
-var Path = function (dom) {
-	var MAXWIDTH = 1000,
-		MAXHEIGHT = 800,
-		nodes = {
-			A: {
-				x: 10,
-				y: 100,
-				edges: ["B", "C", "F"]
-			},
-			B: {
-				x: 400,
-				y: 400,
-				edges: ["E"]
-			},
-			C: {
-				x: 300,
-				y: 50,
-				edges: ["D", "B"]
-			},
-			D: {
-				x: 600,
-				y: 250,
-				edges: ["G"]
-			},
-			E: {
-				x: 800,
-				y: 500,
-				edges: ["D", "G"]
-			},
-			F: {
-				x: 300,
-				y: 700,
-				edges: ["E"]
-			},
-			G: {
-				x: 900,
-				y: 100
-			}
-		},
+var Path = function (dom, nodes) {
+	var MAXWIDTH = 1300,
+		MAXHEIGHT = 900,
 		context = dom.getContext("2d");
 
 	dom.width = MAXWIDTH;
@@ -44,20 +8,27 @@ var Path = function (dom) {
 
 	function drawGraph() {
 		context.clearRect(0, 0, MAXWIDTH, MAXHEIGHT);
+		drawEdges();
+		drawVertexes();
+	}
 
+	function drawVertexes() {
 		context.fillStyle = "black";
-		context.strokeStyle = "#EEEEEE";
-		context.lineWidth = "3";
-		var node, edgeTarget;
+		var node;
 		for (var prop in nodes) {
-			console.log("Drawing "+ prop);
-
 			node = nodes[prop];
-
 			// context.fillRect(node.x, node.y, 10, 10);
 			context.font = "16px sans-serif";
 			context.fillText(prop, node.x - 5, node.y);
+		}
+	}
 
+	function drawEdges () {
+		var node, edgeTarget;
+		context.strokeStyle = "#EEEEEE";
+		context.lineWidth = "3";
+		for (var prop in nodes) {
+			node = nodes[prop];
 			if (node.edges) {
 				node.edges.forEach(function (edge) {
 					edgeTarget = nodes[edge];
@@ -73,6 +44,18 @@ var Path = function (dom) {
 			}
 		}
 	}
+
+	function nodeDistance(a, b) {
+		return (Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
+	}
+
+	function findShortestPath(a, b) {
+		// using Dijkstra's
+
+
+	}
+
+
 
 	drawGraph();
 }

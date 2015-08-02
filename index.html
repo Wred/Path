@@ -2,8 +2,71 @@
 <head>
 	<script src="js/path.js"></script>
 	<script>
+
+		var nodes = {
+			A: {
+				x: 10,
+				y: 100,
+				edges: ["B", "C", "F", "L"]
+			},
+			B: {
+				x: 400,
+				y: 400,
+				edges: ["E"]
+			},
+			C: {
+				x: 300,
+				y: 50,
+				edges: ["D", "B"]
+			},
+			D: {
+				x: 600,
+				y: 250,
+				edges: ["G"]
+			},
+			E: {
+				x: 800,
+				y: 500,
+				edges: ["D", "G", "I"]
+			},
+			F: {
+				x: 300,
+				y: 700,
+				edges: ["E"]
+			},
+			G: {
+				x: 900,
+				y: 100,
+				edges: ["K"]
+			},
+			H: {
+				x: 1100,
+				y: 500,
+				edges: ["E", "K"]
+			},
+			I: {
+				x: 1200,
+				y: 800,
+				edges: ["H"]
+			},
+			J: {
+				x: 400,
+				y: 850,
+				edges: ["E", "I"]
+			},
+			K: {
+				x: 1150,
+				y: 200
+			},
+			L: {
+				x: 100,
+				y: 750,
+				edges: ["J"]
+			}
+		}
+
 		window.addEventListener("load", function () {
-			var path = Path(document.getElementById("path"));
+			var path = Path(document.getElementById("path"), nodes);
 		});
 	</script>
 	<style>
