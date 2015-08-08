@@ -2,7 +2,6 @@
 <head>
 	<script src="js/path.js"></script>
 	<script>
-
 		var nodes = {
 			A: {
 				x: 10,
@@ -12,7 +11,7 @@
 			B: {
 				x: 400,
 				y: 400,
-				edges: ["E"]
+				edges: ["E", "L", "K"]
 			},
 			C: {
 				x: 300,
@@ -22,7 +21,7 @@
 			D: {
 				x: 600,
 				y: 250,
-				edges: ["G"]
+				edges: ["G", "A"]
 			},
 			E: {
 				x: 800,
@@ -47,16 +46,17 @@
 			I: {
 				x: 1200,
 				y: 800,
-				edges: ["H"]
+				edges: ["H", "J"]
 			},
 			J: {
 				x: 400,
 				y: 850,
-				edges: ["E", "I"]
+				edges: ["E", "I", "B"]
 			},
 			K: {
 				x: 1150,
-				y: 200
+				y: 200,
+				edges: ["C"]
 			},
 			L: {
 				x: 100,
@@ -66,7 +66,7 @@
 		}
 
 		window.addEventListener("load", function () {
-			var path = Path(document.getElementById("path"), nodes);
+			var path = Path(document.getElementById("path"), nodes, "K", "J");
 		});
 	</script>
 	<style>

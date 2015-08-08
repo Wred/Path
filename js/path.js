@@ -1,4 +1,4 @@
-var Path = function (dom, nodes) {
+var Path = function (dom, nodes, sourceNodeName, destinationNodeName) {
 	var MAXWIDTH = 1300,
 		MAXHEIGHT = 900,
 		INFINITY = Number.MAX_SAFE_INTEGER,
@@ -27,8 +27,6 @@ var Path = function (dom, nodes) {
 
 	function drawEdges () {
 		var node, edgeTarget, midX, midY;
-		context.strokeStyle = COLOR_EDGES;
-		context.lineWidth = "1";
 		context.fillStyle = COLOR_EDGES;
 		context.font = "12px sans-serif";
 
@@ -38,13 +36,7 @@ var Path = function (dom, nodes) {
 				node.edges.forEach(function (edge) {
 					edgeTarget = nodes[edge];
 
-					context.beginPath();
-					context.setLineDash([15, 5]);
-					context.moveTo(node.x, node.y);
-					context.lineTo(edgeTarget.x, edgeTarget.y);
-					// context.arcTo(node.x, node.y, edgeTarget.x, edgeTarget.y, 50);
-					// context.arc(node.x, node.y, )
-					context.stroke();
+					drawLine(COLOR_EDGES, 1, [5], prop, edge);
 
 					midX = ((edgeTarget.x - node.x) / 2) + node.x;
 					midY = ((edgeTarget.y - node.y) / 2) + node.y;
@@ -53,6 +45,46 @@ var Path = function (dom, nodes) {
 				});
 			}
 		}
+	}
+
+	function drawLine(color, width, dash, sourceNodeName, destinationNodeName) {
+		context.strokeStyle = color;
+		context.lineWidth = width;
+		context.setLineDash(dash);
+		context.fillStyle = color;
+
+		context.beginPath();
+		context.moveTo(nodes[sourceNodeName].x, nodes[sourceNodeName].y);
+		context.lineTo(nodes[destinationNodeName].x, nodes[destinationNodeName].y);
+		// context.arcTo(node.x, node.y, edgeTarget.x, edgeTarget.y, 50);
+		// context.arc(node.x, node.y, )
+		context.stroke();
+
+		// draw arrow
+		// get reverse angle
+		var angle = Math.atan2(nodes[sourceNodeName].x - nodes[destinationNodeName].x, nodes[sourceNodeName].y - nodes[destinationNodeName].y);
+ 		angle += .05 * Math.PI;
+
+		var arrowStartX = nodes[destinationNodeName].x + (Math.sin(angle) * 30);
+		var arrowStartY = nodes[destinationNodeName].y + (Math.cos(angle) * 30);
+
+ 		angle -= .1 * Math.PI;
+
+		var arrowEndX = nodes[destinationNodeName].x + (Math.sin(angle) * 30);
+		var arrowEndY = nodes[destinationNodeName].y + (Math.cos(angle) * 30);
+
+		
+		context.setLineDash([]);
+		context.beginPath();
+		context.moveTo(arrowStartX, arrowStartY);
+		context.lineTo(nodes[destinationNodeName].x, nodes[destinationNodeName].y);
+		context.lineTo(arrowEndX, arrowEndY);
+		// context.arcTo(node.x, node.y, edgeTarget.x, edgeTarget.y, 50);
+		// context.arc(node.x, node.y, )
+		context.closePath();
+		context.stroke();
+		context.fill();
+
 	}
 
 	function nodeDistance(sourceNodeName, destinationNodeName) {
@@ -85,7 +117,7 @@ var Path = function (dom, nodes) {
 		var shortestPath = [],
 			currentNode = destinationNodeName;
 
-		while (currentNode) {
+		while (currentNode && pathTree[currentNode]) {
 			shortestPath.splice(0, 0, currentNode);
 			currentNode = pathTree[currentNode].parent;
 		}
@@ -131,8 +163,6 @@ var Path = function (dom, nodes) {
 		var node,
 			nodeParent;
 
-		context.strokeStyle = "#0000EE";
-		context.lineWidth = "3";
 		context.fillStyle = "black";
 		context.font = "10px sans-serif";
 
@@ -142,36 +172,17 @@ var Path = function (dom, nodes) {
 			context.fillText(Math.floor(pathTree[prop].weight), node.x + 10, node.y);
 
 			if (pathTree[prop].parent) {
-				nodeParent = nodes[pathTree[prop].parent];
-
-				context.beginPath();
-				context.setLineDash([5, 15]);
-				context.moveTo(node.x, node.y);
-				context.lineTo(nodeParent.x, nodeParent.y);
-				context.stroke();
+				drawLine("#0000EE", 3, [10], pathTree[prop].parent, prop);
 			}
 		}
 	}
 
 	function drawPath(arr) {
-		context.strokeStyle = "#EE0000";
-		context.lineWidth = "5";
-		context.setLineDash([]);
-				
 		for (var i=0,l=arr.length - 1; i<l; i++) {
-			context.beginPath();
-			context.moveTo(nodes[arr[i]].x, nodes[arr[i]].y);
-			context.lineTo(nodes[arr[i + 1]].x, nodes[arr[i + 1]].y);
-			// context.arcTo(node.x, node.y, edgeTarget.x, edgeTarget.y, 50);
-			// context.arc(node.x, node.y, )
-			context.stroke();
+			drawLine("#EE0000", 5, [], arr[i], arr[i+1]);
 		}
 	}
 
-
 	drawGraph();
-
-	var path = findShortestPath("A", "H");
-
-	drawPath(path);
+	drawPath(findShortestPath(sourceNodeName, destinationNodeName));
 };
